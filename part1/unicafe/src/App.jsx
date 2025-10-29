@@ -4,12 +4,18 @@ const Statistics = (props) => {
   return (
     <>
       <h2>Statistics</h2>
-      <p>Good: {props.good}</p>
-      <p>Neutral: {props.neutral}</p>
-      <p>Bad: {props.bad}</p>
-      <p>Total: {props.total}</p>
-      <p>average: {props.average}</p>
-      <p>positive: {props.positive} %</p>
+      {props.total > 0 ? (
+        <div>
+          <p>good: {props.good}</p>
+          <p>neutral: {props.neutral}</p>
+          <p>bad: {props.bad}</p>
+          <p>total: {props.total}</p>
+          <p>average: {props.average}</p>
+          <p>positive: {props.positive} %</p>
+        </div>
+      ) : (
+        <p>No feedback given</p>
+      )}
     </>
   );
 };
