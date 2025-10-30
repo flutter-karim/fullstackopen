@@ -27,6 +27,11 @@ function App() {
     setFiltered(results);
   };
 
+  const handleShow = (countryName) => {
+    const country = countries.find((c) => c.name.common === countryName);
+    setFiltered([country]);
+  };
+
   return (
     <>
       <div>
@@ -37,7 +42,12 @@ function App() {
         {filtered.length <= 10 && filtered.length > 1 && (
           <>
             {filtered.map((country) => (
-              <p key={country.cca3}>{country.name.common}</p>
+              <p key={country.cca3}>
+                {country.name.common}
+                <button onClick={() => handleShow(country.name.common)}>
+                  show
+                </button>
+              </p>
             ))}
           </>
         )}
