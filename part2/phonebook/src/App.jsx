@@ -19,7 +19,7 @@ function App() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [persons]);
 
   const handelName = (e) => {
     setNewName(e.target.value);
@@ -37,10 +37,20 @@ function App() {
     if (names.indexOf(newName.toLowerCase()) !== -1) {
       alert(`${newName} is already added to phonebook`);
     } else {
-      setPersons([
-        ...persons,
-        { name: newName, number: newNumber, id: persons.length + 1 },
-      ]);
+      setPersons([]);
+
+      const newObject = {
+        name: newName,
+        number: newNumber,
+        id: persons.length + 1,
+      };
+
+      axios
+        .post("http://localhost:3001/persons", newObject)
+        .then((response) => {
+          console.log(response);
+        });
+
       setNewName("");
       setNewNumber("");
     }
