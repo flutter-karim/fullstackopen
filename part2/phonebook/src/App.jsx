@@ -34,8 +34,27 @@ function App() {
   const handelSubmit = (e) => {
     e.preventDefault();
     const names = persons.map((person) => person.name.toLowerCase());
-    if (names.indexOf(newName.toLowerCase()) !== -1) {
-      alert(`${newName} is already added to phonebook`);
+    const index = names.indexOf(newName.toLowerCase());
+
+    if (index !== -1) {
+      const confirmUpdate = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with an new one?`
+      );
+      if (!confirmUpdate) return;
+
+      const updatedPerson = { ...persons[index], number: newNumber };
+
+      phoneBookService
+        .updateItem(updatedPerson)
+        .then((response) => {
+          console.log(response);
+          setPersons([]);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
     } else {
       const newObject = {
         name: newName,
