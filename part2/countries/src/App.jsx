@@ -11,13 +11,14 @@ const Part = (props) => {
 };
 
 const Content = (props) => {
-  let total = 0;
+  const total = props.parts.reduce((s, p) => {
+    return s + p.exercises;
+  }, 0);
   return (
     <div>
-      {props.parts.map((part) => {
-        total += part.exercises;
-        return <Part key={part.id} part={part} />;
-      })}
+      {props.parts.map((part) => (
+        <Part key={part.id} part={part} />
+      ))}
       <h3>total of {total} exercies</h3>
     </div>
   );
