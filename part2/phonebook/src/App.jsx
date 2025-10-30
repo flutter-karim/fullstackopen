@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Filter } from "./components/filter";
 import { PersonForm } from "./components/personForm";
 import { Persons } from "./components/persons";
+import { Notification } from "./components/notification";
 import phoneBookService from "./services/phonebook";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     phoneBookService
@@ -65,6 +67,7 @@ function App() {
       phoneBookService.addNew(newObject).then((response) => {
         console.log(response);
         setPersons([]);
+        setSuccessMessage(`Added ${newObject.name}`);
       });
 
       setNewName("");
@@ -90,9 +93,11 @@ function App() {
     <>
       <div>
         <h2>Phonebook</h2>
+
         <Filter value={filter} onChange={handleFilterChange} />
 
         <h3>Add a new</h3>
+        <Notification message={successMessage} />
         <PersonForm
           name={newName}
           number={newNumber}
