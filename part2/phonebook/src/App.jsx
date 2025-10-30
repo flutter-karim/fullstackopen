@@ -10,7 +10,9 @@ function App() {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [msgType, setMsgType] = useState("");
+  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     phoneBookService
@@ -21,7 +23,7 @@ function App() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [persons]);
+  }, [update]);
 
   const handelName = (e) => {
     setNewName(e.target.value);
@@ -50,7 +52,7 @@ function App() {
         .updateItem(updatedPerson)
         .then((response) => {
           console.log(response);
-          setPersons([]);
+          setUpdate(true);
           setNewName("");
           setNewNumber("");
         })
@@ -66,8 +68,9 @@ function App() {
 
       phoneBookService.addNew(newObject).then((response) => {
         console.log(response);
-        setPersons([]);
-        setSuccessMessage(`Added ${newObject.name}`);
+        setUpdate(true);
+        setMessage(`Added ${newObject.name}`);
+        setMsgType("done");
       });
 
       setNewName("");
@@ -83,10 +86,18 @@ function App() {
     const confirmDelete = window.confirm(`Delete ${name} ?`);
     if (!confirmDelete) return;
 
-    phoneBookService.deleteItem(id).then((response) => {
-      setPersons([]);
-      console.log(response);
-    });
+    phoneBookService
+      .deleteItem(id)
+      .then((response) => {
+        setUpdate(true);
+        console.log(response);
+      })
+      .catch(() => {
+        setMessage(
+          `Information of ${name} has alreday been removed from server`
+        );
+        setMsgType("error");
+      });
   };
 
   return (
@@ -97,7 +108,7 @@ function App() {
         <Filter value={filter} onChange={handleFilterChange} />
 
         <h3>Add a new</h3>
-        <Notification message={successMessage} />
+        <Notification message={message} type={msgType} />
         <PersonForm
           name={newName}
           number={newNumber}
