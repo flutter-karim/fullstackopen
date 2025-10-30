@@ -10,8 +10,13 @@ function App() {
 
   const handelSubmit = (e) => {
     e.preventDefault();
-    setPersons([...persons, { name: newName }]);
-    setNewName("");
+    const names = persons.map((person) => person.name.toLowerCase());
+    if (names.indexOf(newName.toLowerCase()) !== -1) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+      setPersons([...persons, { name: newName }]);
+      setNewName("");
+    }
   };
   return (
     <>
