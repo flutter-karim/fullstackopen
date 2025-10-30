@@ -37,16 +37,15 @@ function App() {
     if (names.indexOf(newName.toLowerCase()) !== -1) {
       alert(`${newName} is already added to phonebook`);
     } else {
-      setPersons([]);
-
       const newObject = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
+        id: (persons.length + 1).toString(),
       };
 
       phoneBookService.addNew(newObject).then((response) => {
         console.log(response);
+        setPersons([]);
       });
 
       setNewName("");
@@ -57,6 +56,17 @@ function App() {
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.toLowerCase())
   );
+
+  const handleDelete = (id, name) => {
+    const confirmDelete = window.confirm(`Delete ${name} ?`);
+    if (!confirmDelete) return;
+
+    phoneBookService.deleteItem(id).then((response) => {
+      setPersons([]);
+      console.log(response);
+    });
+  };
+
   return (
     <>
       <div>
@@ -73,7 +83,11 @@ function App() {
         />
 
         <h2>Numbers</h2>
-        <Persons persons={filteredPersons} filter={filter} />
+        <Persons
+          persons={filteredPersons}
+          filter={filter}
+          delete={handleDelete}
+        />
       </div>
     </>
   );

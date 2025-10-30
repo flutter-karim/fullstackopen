@@ -4,6 +4,9 @@ export const Persons = (props) => {
       {props.persons.map((person) => (
         <p key={person.id}>
           {person.name} {person.number}
+          <button onClick={() => props.delete(person.id, person.name)}>
+            delete
+          </button>
         </p>
       ))}
       {props.persons.length === 0 ? (
