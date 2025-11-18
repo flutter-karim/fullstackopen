@@ -60,4 +60,19 @@ app.delete("/api/persons/:id", (req, res) => {
   res.status(204);
 });
 
+app.post("/api/persons", (req, res) => {
+  const { name, number } = req.body;
+  const newId = Math.floor(Math.random() * 1000000000).toString();
+
+  const newPerson = {
+    id: newId,
+    name,
+    number,
+  };
+
+  persons.push(newPerson);
+
+  res.status(201).send(newPerson);
+});
+
 app.listen(3001, () => {});
