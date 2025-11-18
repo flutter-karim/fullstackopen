@@ -35,4 +35,13 @@ app.get("/info", (req, res) => {
   );
 });
 
+app.get("/api/persons/:id", (req, res) => {
+  const userId = req.params.id;
+  const userIndex = persons.findIndex((user) => user.id === userId);
+  if (userIndex === -1) {
+    return res.status(404).send(`No user found with id ${userId}`);
+  }
+  res.send(JSON.stringify(persons[userIndex]));
+});
+
 app.listen(3001, () => {});
