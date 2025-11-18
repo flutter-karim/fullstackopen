@@ -64,6 +64,26 @@ app.post("/api/persons", (req, res) => {
   const { name, number } = req.body;
   const newId = Math.floor(Math.random() * 1000000000).toString();
 
+  if (!name) {
+    return res.status(400).json({ error: "name is missing" });
+  }
+
+  if (!number) {
+    return res.status(400).json({ error: "number is missing" });
+  }
+
+  const nameIndex = persons.findIndex((user) => user.name === name);
+
+  if (nameIndex !== -1) {
+    return res.status(400).json({ error: "name must be unique" });
+  }
+
+  const numberIndex = persons.findIndex((user) => user.number === number);
+
+  if (numberIndex !== -1) {
+    return res.status(400).json({ error: "number must be unique" });
+  }
+
   const newPerson = {
     id: newId,
     name,
