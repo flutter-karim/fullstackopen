@@ -1,7 +1,9 @@
 import express from "express";
 const app = express();
 
-const persons = [
+app.use(express.json());
+
+let persons = [
   {
     id: "1",
     name: "Arto Hellas",
@@ -25,7 +27,7 @@ const persons = [
 ];
 
 app.get("/api/persons", (req, res) => {
-  res.send(JSON.stringify(persons));
+  res.send(persons);
 });
 
 app.get("/info", (req, res) => {
@@ -41,7 +43,21 @@ app.get("/api/persons/:id", (req, res) => {
   if (userIndex === -1) {
     return res.status(404).send(`No user found with id ${userId}`);
   }
-  res.send(JSON.stringify(persons[userIndex]));
+  res.send(persons[userIndex]);
+});
+
+app.delete("/api/persons/:id", (req, res) => {
+  const userId = req.params.id;
+  const userIndex = persons.findIndex((user) => user.id === userId);
+
+  if (userIndex === -1) {
+    return res.status(404).send(`No user found with id ${userId}`);
+  }
+
+  const updatedPersons = persons.filter((user) => user.id !== userId);
+  persons = updatedPersons;
+
+  res.status(204);
 });
 
 app.listen(3001, () => {});
