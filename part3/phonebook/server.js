@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import cors from "cors";
 
 const app = express();
 
@@ -8,6 +9,7 @@ morgan.token("body", (req) => {
 });
 
 app.use(express.json());
+app.use(cors("*"));
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
@@ -36,7 +38,7 @@ let persons = [
 ];
 
 app.get("/api/persons", (req, res) => {
-  res.send(persons);
+  res.json(persons);
 });
 
 app.get("/info", (req, res) => {
@@ -66,7 +68,7 @@ app.delete("/api/persons/:id", (req, res) => {
   const updatedPersons = persons.filter((user) => user.id !== userId);
   persons = updatedPersons;
 
-  res.status(204);
+  res.status(200).send("deleted");
 });
 
 app.post("/api/persons", (req, res) => {

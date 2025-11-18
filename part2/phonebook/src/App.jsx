@@ -100,6 +100,7 @@ function App() {
       });
   };
 
+  console.log(update);
   return (
     <>
       <div>
