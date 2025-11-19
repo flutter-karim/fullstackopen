@@ -33,25 +33,26 @@ app.get("/info", async (req, res) => {
   );
 });
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", async (req, res) => {
   const userId = req.params.id;
-  const userIndex = persons.findIndex((user) => user.id === userId);
-  if (userIndex === -1) {
+
+  const person = await PersonModel.findById(userId);
+
+  if (!person) {
     return res.status(404).send(`No user found with id ${userId}`);
   }
-  res.send(persons[userIndex]);
+
+  res.json(person);
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", async (req, res) => {
   const userId = req.params.id;
-  const userIndex = persons.findIndex((user) => user.id === userId);
 
-  if (userIndex === -1) {
+  const person = await PersonModel.findByIdAndDelete(userId);
+
+  if (!person) {
     return res.status(404).send(`No user found with id ${userId}`);
   }
-
-  const updatedPersons = persons.filter((user) => user.id !== userId);
-  persons = updatedPersons;
 
   res.status(200).send("deleted");
 });
