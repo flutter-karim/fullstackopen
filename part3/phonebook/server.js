@@ -9,6 +9,18 @@ dotenv.config();
 
 const app = express();
 
+const errorHandler = (error, req, res, next) => {
+  if (error.name === "CastError") {
+    return res.status(400).send({ error: error.message });
+  }
+
+  next(error);
+};
+
+const unknownEndpoint = (req, res) => {
+  req.status(404).send({ error: "unknown endpoint" });
+};
+
 morgan.token("body", (req) => {
   return JSON.stringify(req.body);
 });
@@ -39,7 +51,7 @@ app.get("/api/persons/:id", async (req, res) => {
   const person = await PersonModel.findById(userId);
 
   if (!person) {
-    return res.status(404).send(`No user found with id ${userId}`);
+    return res.status(404).json({ error: `No user found with id ${userId}` });
   }
 
   res.json(person);
@@ -77,6 +89,10 @@ app.post("/api/persons", async (req, res) => {
 
   res.status(201).send(person);
 });
+
+app.use(errorHandler);
+
+app.use(unknownEndpoint);
 
 const PORT = process.env.PORT || 5000;
 
