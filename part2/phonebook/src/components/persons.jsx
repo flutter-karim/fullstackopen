@@ -2,9 +2,9 @@ export const Persons = (props) => {
   return (
     <>
       {props.persons.map((person) => (
-        <p key={person.id}>
+        <p key={person._id}>
           {person.name} {person.number}
-          <button onClick={() => props.delete(person.id, person.name)}>
+          <button onClick={() => props.delete(person._id, person.name)}>
             delete
           </button>
         </p>
