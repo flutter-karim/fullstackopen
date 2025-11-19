@@ -33,7 +33,6 @@ app.use(
 
 app.get("/api/persons", async (req, res) => {
   const persons = await PersonModel.find({});
-
   res.json(persons);
 });
 
@@ -78,6 +77,20 @@ app.post("/api/persons", async (req, res) => {
 
   if (!number) {
     return res.status(400).json({ error: "number is missing" });
+  }
+
+  const checkExists = await PersonModel.findOne({ name });
+
+  if (checkExists) {
+    const update = await PersonModel.findByIdAndUpdate(
+      checkExists._id,
+      { number },
+      {
+        new: true,
+      }
+    );
+
+    return res.status(200).json(update);
   }
 
   const newPerson = {
