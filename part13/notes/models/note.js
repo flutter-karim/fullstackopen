@@ -19,7 +19,7 @@ const Note = sequelize.define('note',{
     type: DataTypes.DATE
   }
 },{
-    timestamps: false,
+    timestamps: true,
     underscored: true,
   },);
 

@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const sequelize = require('./config/database');
 const Note = require('./models/note');
 
 const app = express()
@@ -23,7 +24,33 @@ app.post('/api/notes', async (req, res) => {
   }
 })
 
+// get one note by id
+app.get('/api/notes/:id', async (req, res) => {
+  const note = await Note.findByPk(req.params.id)
+  if (note) {
+    res.json(note)
+  } else {
+    res.status(404).end()
+  }
+})
+
+// update one note
+app.put('/api/notes/:id', async (req, res) => {
+  const note = await Note.findByPk(req.params.id)
+  if (note) {
+    note.important = req.body.important
+    await note.save()
+    res.json(note)
+  } else {
+    res.status(404).end()
+  }
+})
+
 const PORT = process.env.PORT || 9988
+
+// sequelize.sync({ force: true });
+sequelize.sync();
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
