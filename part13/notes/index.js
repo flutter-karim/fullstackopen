@@ -1,64 +1,26 @@
 require('dotenv').config()
 const express = require('express')
 const sequelize = require('./config/database');
+const notesRouter = require('./controllers/notes')
 const Note = require('./models/note');
 
 const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// get all notes
-app.get('/api/notes', async (req, res) => {
-  const notes = await Note.findAll();
-    console.log(JSON.stringify(notes))
-  res.json(notes)
-})
+app.use('/api/notes', notesRouter)
 
-// create new post
-app.post('/api/notes', async (req, res) => {
-    console.log(req.body);
-  try {
-    const note = await Note.create(req.body)
-    return res.json(note)
-  } catch(error) {
-    return res.status(400).json({ error })
-  }
-})
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
 
-// get one note by id
-app.get('/api/notes/:id', async (req, res) => {
-  const note = await Note.findByPk(req.params.id)
-  if (note) {
-    // console.log(note)
-    console.log(note.toJSON())
-    res.json(note)
-  } else {
-    res.status(404).end()
-  }
-})
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'id is required' })
+  } 
 
-// update one note
-app.put('/api/notes/:id', async (req, res) => {
-  const note = await Note.findByPk(req.params.id)
-  if (note) {
-    note.important = req.body.important
-    await note.save()
-    res.json(note)
-  } else {
-    res.status(404).end()
-  }
-})
+  next(error)
+}
 
-// delete one note
-app.delete('/api/notes/:id', async (req, res) => {
-  const note = await Note.findByPk(req.params.id)
-  if (note) {    
-    await note.destroy()
-    res.status(204).end()
-  } else {
-    res.status(404).end()
-  }
-})
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 9988
 
