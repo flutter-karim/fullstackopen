@@ -17,13 +17,14 @@ const users = await User.findAll({
 })
 
 // create new user
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     console.log(req.body);
   try {
     const user = await User.create(req.body)
     return res.json(user)
   } catch(error) {
-    return res.status(400).json({ error })
+        next(error);
+
   }
 })
 
