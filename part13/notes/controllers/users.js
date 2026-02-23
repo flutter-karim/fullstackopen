@@ -23,8 +23,7 @@ router.post('/', async (req, res, next) => {
     const user = await User.create(req.body)
     return res.json(user)
   } catch(error) {
-        next(error);
-
+    next(error);
   }
 })
 
@@ -39,6 +38,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+// update by username
 router.put('/:username', async (req, res) => {
   const user = await User.findOne({ where: { username: req.params.username } });
   console.log(user);
@@ -50,6 +50,5 @@ router.put('/:username', async (req, res) => {
     res.status(404).end()
   }
 })
-
 
 module.exports = router;
